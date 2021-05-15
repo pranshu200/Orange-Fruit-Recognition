@@ -1,0 +1,265 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EdgeDetection</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-14"><meta name="DC.source" content="EdgeDetection.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%{
+</span><span class="comment">Orange Fruit Recognition using Image Segmentation
+</span><span class="comment">Implemented using EDGE Detection and Color Based Segmentation.
+</span><span class="comment">%}
+</span>clc <span class="comment">% Clear command window.</span>
+clear <span class="string">all</span>  <span class="comment">% Delete all variables.</span>
+close <span class="string">all</span>  <span class="comment">% Close all figure windows except those created by imtool.</span>
+warning <span class="string">off</span> <span class="comment">%To turn off the warning.img=clickingSingleImage(vidObj);</span>
+
+<span class="comment">%Step 1: Reading the Image</span>
+I = imread(<span class="string">'xyz2.jpg'</span>);
+subplot(5,2,1);
+imshow(I);
+title(<span class="string">'Original Image'</span>);
+
+<span class="comment">%Step2: Colour Based Segmentation</span>
+<span class="comment">%To convert the image to gray scale image.</span>
+m= rgb2gray(I);
+subplot(5,2,2);
+imshow(m);
+title(<span class="string">'Gray Scale Image'</span>)
+imwrite(m, <span class="string">'GrayScale.jpg'</span>);
+
+<span class="comment">%To find the orange colored objects.</span>
+orange=I(:,:,1);
+subplot(5,2,3);
+imshow(orange);
+title(<span class="string">'Orange Fruit Detection'</span>);
+imwrite(orange, <span class="string">'orangePartDetection.jpg'</span>);
+
+<span class="comment">%To get the segmented image for Orange coloured Objects.</span>
+l=imsubtract(orange,m);
+J=im2bw(l,0.25);
+subplot(5,2,4);
+imshow(J);
+title(<span class="string">'Orange Segmented Image'</span>);
+imwrite(J, <span class="string">'orange_part_segmented.jpg'</span>);
+
+<span class="comment">%Edge Based Segmentation</span>
+<span class="comment">%Step 3: Detecting the Entire Cell</span>
+temp1 = edge(J,<span class="string">'approxcanny'</span>);
+fudgeFactor = 0.5;
+subplot(5,2,5);
+imshow(temp1);
+title(<span class="string">'Binary Gradient Mask'</span>);
+imwrite(temp1, <span class="string">'BinaryGradientMask.jpg'</span>);
+
+<span class="comment">%Step 4: Dilating the Image</span>
+dialated1 = strel(<span class="string">'line'</span>, 3, 90);
+dialated2= strel(<span class="string">'line'</span>, 3, 0);
+temp2 = imdilate(temp1, [dialated1 dialated2]);
+subplot(5,2,6);
+imshow(temp2);
+title(<span class="string">'Dilated Gradient Mask'</span>);
+imwrite(temp2, <span class="string">'DialatedGradientMask.jpg'</span>);
+
+<span class="comment">%Step 5: Filling Interior Gaps</span>
+fill1 = imfill(temp2, <span class="string">'holes'</span>);
+subplot(5,2,7);
+imshow(fill1);
+title(<span class="string">'Binary Image With Filled Holes'</span>);
+imwrite(fill1, <span class="string">'FilledHoles.jpg'</span>);
+
+<span class="comment">%Step 6: Removing Connected Objects on the Border</span>
+border1 = imclearborder(fill1, 4);
+subplot(5,2,8);
+imshow(border1);
+title(<span class="string">'Cleared Border Image'</span>);
+imwrite(border1, <span class="string">'clearedBorder.jpg'</span>);
+
+<span class="comment">%Step 7: Smoothing the Object</span>
+seD = strel(<span class="string">'diamond'</span>,1);
+final1 = imerode(border1,seD);
+final1 = imerode(final1,seD);
+subplot(5,2,9);
+imshow(final1);
+title(<span class="string">'Segmented Image'</span>);
+imwrite(final1, <span class="string">'finalGraySegmentation.jpg'</span>);
+
+<span class="comment">%Step 8: Original outlined Image</span>
+outline = bwperim(final1);
+Segmentedout = I;
+Segmentedout(outline) = 0;
+subplot(5,2,10);
+imshow(Segmentedout);
+imwrite(Segmentedout, <span class="string">'output.jpg'</span>);
+title(<span class="string">'Outlined Original Image'</span>);
+imwrite(Segmentedout, <span class="string">'Output.jpg'</span>);
+
+<span class="comment">%Display Orange Fruit Detected output</span>
+imwrite(label2rgb(J),<span class="string">'SantraOutput.jpg'</span>);
+figure, imshow(label2rgb(J));
+title(<span class="string">'Orange Fruit Detected'</span>);
+<span class="comment">%Display Final output</span>
+figure, imshow(Segmentedout);
+title(<span class="string">'FINAL ORANGE FRUIT RECOGNIZED IMAGE'</span>);
+</pre><img vspace="5" hspace="5" src="EdgeDetection_01.png" alt=""> <img vspace="5" hspace="5" src="EdgeDetection_02.png" alt=""> <img vspace="5" hspace="5" src="EdgeDetection_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%{
+Orange Fruit Recognition using Image Segmentation
+Implemented using EDGE Detection and Color Based Segmentation.
+%}
+clc % Clear command window.
+clear all  % Delete all variables.
+close all  % Close all figure windows except those created by imtool.
+warning off %To turn off the warning.img=clickingSingleImage(vidObj);
+
+%Step 1: Reading the Image
+I = imread('xyz2.jpg');
+subplot(5,2,1);
+imshow(I);
+title('Original Image');
+
+%Step2: Colour Based Segmentation
+%To convert the image to gray scale image.
+m= rgb2gray(I);
+subplot(5,2,2);
+imshow(m);
+title('Gray Scale Image')
+imwrite(m, 'GrayScale.jpg');
+
+%To find the orange colored objects.
+orange=I(:,:,1);
+subplot(5,2,3);
+imshow(orange);
+title('Orange Fruit Detection');
+imwrite(orange, 'orangePartDetection.jpg');
+
+%To get the segmented image for Orange coloured Objects.
+l=imsubtract(orange,m);
+J=im2bw(l,0.25);
+subplot(5,2,4);
+imshow(J);
+title('Orange Segmented Image');
+imwrite(J, 'orange_part_segmented.jpg');
+
+%Edge Based Segmentation
+%Step 3: Detecting the Entire Cell
+temp1 = edge(J,'approxcanny');
+fudgeFactor = 0.5;
+subplot(5,2,5);
+imshow(temp1);
+title('Binary Gradient Mask');
+imwrite(temp1, 'BinaryGradientMask.jpg');
+
+%Step 4: Dilating the Image
+dialated1 = strel('line', 3, 90);
+dialated2= strel('line', 3, 0);
+temp2 = imdilate(temp1, [dialated1 dialated2]);
+subplot(5,2,6);
+imshow(temp2);
+title('Dilated Gradient Mask');
+imwrite(temp2, 'DialatedGradientMask.jpg');
+
+%Step 5: Filling Interior Gaps
+fill1 = imfill(temp2, 'holes');
+subplot(5,2,7);
+imshow(fill1);
+title('Binary Image With Filled Holes');
+imwrite(fill1, 'FilledHoles.jpg');
+
+%Step 6: Removing Connected Objects on the Border
+border1 = imclearborder(fill1, 4);
+subplot(5,2,8);
+imshow(border1);
+title('Cleared Border Image');
+imwrite(border1, 'clearedBorder.jpg');
+
+%Step 7: Smoothing the Object
+seD = strel('diamond',1);
+final1 = imerode(border1,seD);
+final1 = imerode(final1,seD);
+subplot(5,2,9);
+imshow(final1);
+title('Segmented Image');
+imwrite(final1, 'finalGraySegmentation.jpg');
+
+%Step 8: Original outlined Image
+outline = bwperim(final1);
+Segmentedout = I;
+Segmentedout(outline) = 0;
+subplot(5,2,10);
+imshow(Segmentedout);
+imwrite(Segmentedout, 'output.jpg');
+title('Outlined Original Image');
+imwrite(Segmentedout, 'Output.jpg');
+
+%Display Orange Fruit Detected output
+imwrite(label2rgb(J),'SantraOutput.jpg');
+figure, imshow(label2rgb(J));
+title('Orange Fruit Detected');
+%Display Final output
+figure, imshow(Segmentedout);
+title('FINAL ORANGE FRUIT RECOGNIZED IMAGE');
+##### SOURCE END #####
+--></body></html>
