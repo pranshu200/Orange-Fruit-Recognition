@@ -15,16 +15,16 @@ to segment the object from the background to read the image properly and identif
 the image carefully. In this context, edge detection is a fundamental tool for image segmentation.
 
 # Steps:
-Step 1: Reading the Image
-Step 2: To convert image to gray scale.
-  Step 2.2: To find orange colored Objects.
-  Step 2.3: To get the segmented image for Orange coloured Objects.
+Step 1: Reading the Image <br>
+Step 2: To convert image to gray scale. <br>
+  Step 2.2: To find orange colored Objects. <br>
+  Step 2.3: To get the segmented image for Orange coloured Objects. <br>
 
--> After get the gray scale image of only the orange fruit from the given image we apply Edge based Segmentation to get a more accurate result with border around the identified      fruit.
+-> After get the gray scale image of only the orange fruit from the given image we apply Edge based Segmentation to get a more accurate result with border around the identified      fruit.<br>
 
-Step 3: Detecting the entire Object:
-Step 4: Dilating the Image
-Step 5: Filling the Interior Gaps
-Step 6: Removing Connected Objects on the Border
-Step 7: Smoothing the Object
-Step 8: To get the original outlined Image.
+Step 3: Detecting the entire Object:<br>
+Step 4: Dilating the Image<br>
+Step 5: Filling the Interior Gaps <br>
+Step 6: Removing Connected Objects on the Border <br>
+Step 7: Smoothing the Object <br>
+Step 8: To get the original outlined Image.<br>
